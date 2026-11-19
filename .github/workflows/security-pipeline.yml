@@ -23,6 +23,24 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install bandit semgrep
+
+      - name: Create reports directory
+        run: mkdir -p reports
 
       - name: Run tests
         run: pytest -v
+
+      - name: Run Bandit
+        run: bandit -r app/ -f json -o reports/bandit-report.json || true
+
+      - name: Run Semgrep
+        run: semgrep scan --config security/semgrep/rules.yml --metrics=off --json --output reports/semgrep-report.json app/ || true
+
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: reports/
+          if-no-files-found: warn
