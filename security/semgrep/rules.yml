@@ -1,0 +1,24 @@
+rules:
+  - id: no-eval
+    pattern: eval(...)
+    message: Use of eval() is dangerous, it can execute arbitrary code.
+    languages: [python]
+    severity: ERROR
+
+  - id: no-exec
+    pattern: exec(...)
+    message: Use of exec() is dangerous, it can execute arbitrary code.
+    languages: [python]
+    severity: ERROR
+
+  - id: flask-debug-enabled
+    pattern: $APP.run(..., debug=True, ...)
+    message: Flask debug mode must not be enabled in production.
+    languages: [python]
+    severity: WARNING
+
+  - id: subprocess-shell-true
+    pattern: subprocess.$FUNC(..., shell=True, ...)
+    message: shell=True can lead to command injection.
+    languages: [python]
+    severity: ERROR
